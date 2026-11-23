@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>All Competitive Exams Mock Test & Practice Portal</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- MathJax for Chemical Formulas & LaTeX rendering -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        html, body {
+            font-family: 'Poppins', sans-serif;
+            max-width: 100vw;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        button, label, input, select, summary {
+            touch-action: manipulation;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Custom Details Dropdown Arrow Animation */
+        details > summary {
+            list-style: none;
+        }
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+        details[open] .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
+
+    
+            </div>
+        </div>
+
+        <!-- Navigation Wrapper (होम पेज पर दिखेगा, रिजल्ट/टेस्ट में ऑटो-हाइड होगा ताकि सिर्फ बैनर फिक्स रहे) -->
+        <div id="top-nav-bars-wrapper">
+            <!-- Main Exams Navigation Bar -->
+            <div class="bg-white border-b border-slate-200 px-3 py-2">
+                <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 flex-grow select-none" id="main-exams-bar"></div>
+                    <div class="relative shrink-0 pl-2 border-l border-slate-200">
+                        <button type="button" onclick="toggleThreeDotMenu(event)" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-700 flex items-center justify-center font-bold text-lg transition cursor-pointer" title="विकल्प">⋮</button>
+                        <div id="three-dot-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 z-50">
+                            <button type="button" onclick="openPasswordModal()" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 flex items-center gap-2 cursor-pointer">
+                                <span>🔒</span> एडमिन पैनल (Admin)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sub-Exams Bar -->
+            <div id="sub-exams-wrapper" class="bg-slate-50 border-b border-slate-200 px-3 py-2 hidden">
+                <div class="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto no-scrollbar select-none" id="sub-exams-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- डाइनैमिक स्पेसर ताकि फिक्स हेडर के नीचे का कंटेंट दबे नहीं -->
+    <div id="top-fixed-spacer" class="w-full shrink-0" style="height: 140px;"></div>
+
+    <!-- Hidden Password Modal -->
+    <div id="password-modal" class="fixed inset-0 z-50 bg-black/60 hidden backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-slate-200">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-sm font-bold text-slate-800">🔒 एडमिन प्रमाणीकरण</h3>
+                <button type="button" onclick="closePasswordModal()" class="text-slate-400 hover:text-slate-700 font-bold cursor-pointer p-1">✕</button>
+            </div>
+            <p class="text-xs text-slate-500 mb-3">एडमिन पैनल खोलने के लिए गुप्त पासवर्ड दर्ज करें:</p>
+            <input type="password" id="admin-pass-input" placeholder="••••••••" class="w-full p-2.5 text-sm border border-slate-300 rounded-xl mb-4 focus:outline-none focus:border-blue-600 text-center tracking-widest" onkeydown="if(event.key==='Enter') verifyAdminPassword()">
+            <div class="flex gap-2">
+                <button type="button" onclick="closePasswordModal()" class="w-1/2 py-2.5 bg-slate-100 text-slate-700 rounded-xl text-xs font-semibold hover:bg-slate-200 cursor-pointer">रद्द करें</button>
+                <button type="button" onclick="verifyAdminPassword()" class="w-1/2 py-2.5 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 shadow cursor-pointer">खोलें</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Home View -->
+    <main id="main-home-view" class="flex-grow max-w-7xl w-full mx-auto px-4 py-5">
+        <div class="mb-5 flex flex-wrap justify-between items-center gap-2">
+            <div>
+                <div id="breadcrumb-trail" class="text-[11px] font-bold text-blue-600 uppercase tracking-wider mb-0.5">सभी परीक्षाएं</div>
+                <h2 id="selected-course-heading" class="text-lg md:text-xl font-bold text-slate-800">सभी उपलब्ध प्रैक्टिस सेट्स</h2>
+            </div>
+            <span id="sets-count-badge" class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full">0 प्रैक्टिस सेट्स</span>
+        </div>
+        <div id="sets-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+    </main>
+
+    <!-- Terms & Conditions Modal -->
+    <div id="terms-modal" class="fixed inset-0 z-50 bg-black/60 hidden backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 my-auto">
+            <div class="flex justify-between items-center border-b pb-3 mb-4">
+                <h3 class="text-base font-bold text-slate-900">📋 Terms & Conditions (नियम एवं शर्तें)</h3>
+                <button type="button" onclick="closeTermsModal()" class="text-slate-400 hover:text-slate-700 font-bold text-lg cursor-pointer p-1">✕</button>
+            </div>
+            <div id="terms-set-info" class="bg-blue-50 p-3.5 rounded-xl border border-blue-100 mb-4 text-xs space-y-1 text-blue-900"></div>
+            <div class="text-xs text-slate-600 space-y-2 mb-5 max-h-40 overflow-y-auto pr-1">
+                <ul class="list-disc pl-5 space-y-1.5">
+                    <li>स्क्रीन पर <strong>एक समय में एक ही प्रश्न</strong> दिखेगा।</li>
+                    <li>ऑप्शन पर क्लिक करने से सेलेक्ट होगा और दोबारा क्लिक करने पर अनसेलेक्ट हो जाएगा।</li>
+                    <li>हर बार टेस्ट शुरू करने पर प्रश्न और विकल्प नए क्रम में दिखेंगे।</li>
+                </ul>
+            </div>
+            <div class="mb-5 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                <span class="block text-xs font-bold text-slate-800 mb-2">🌐 अपनी भाषा चुनें:</span>
+                <div class="grid grid-cols-2 gap-3">
+                    <label for="lang-hi-radio" class="flex items-center justify-center p-2.5 rounded-lg border border-slate-300 bg-white cursor-pointer hover:border-blue-500 select-none">
+                        <input type="radio" id="lang-hi-radio" name="exam_lang" value="hi" checked class="w-4 h-4 mr-2 accent-blue-600 cursor-pointer">
+                        <span class="text-xs font-bold">हिन्दी (Hindi)</span>
+                    </label>
+                    <label for="lang-en-radio" class="flex items-center justify-center p-2.5 rounded-lg border border-slate-300 bg-white cursor-pointer hover:border-blue-500 select-none">
+                        <input type="radio" id="lang-en-radio" name="exam_lang" value="en" class="w-4 h-4 mr-2 accent-blue-600 cursor-pointer">
+                        <span class="text-xs font-bold">English (अंग्रेजी)</span>
+                    </label>
+                </div>
+            </div>
+
+            <label for="accept-terms-checkbox" class="flex items-center gap-3 p-3 bg-blue-50/60 hover:bg-blue-50 border border-blue-200 rounded-xl text-xs font-semibold text-slate-800 mb-5 cursor-pointer select-none">
+                <input type="checkbox" id="accept-terms-checkbox" class="w-5 h-5 accent-blue-600 rounded cursor-pointer shrink-0">
+                <span>मैं सभी नियम व शर्तों से सहमत हूँ।</span>
+            </label>
+
+            <div class="flex gap-3">
+                <button type="button" onclick="closeTermsModal()" class="w-1/3 py-3 bg-slate-100 text-slate-700 rounded-xl text-xs font-semibold hover:bg-slate-200 cursor-pointer">रद्द करें</button>
+                <button type="button" onclick="confirmAndStartExam()" class="w-2/3 py-3 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 shadow cursor-pointer">टेस्ट शुरू करें 🚀</button>
+            </div>
+        </div>
+    </div>
+<!-- Active Exam View -->
+    <section id="exam-view" class="hidden flex-grow max-w-4xl w-full mx-auto px-4 py-5">
+        <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden relative">
+            <div class="bg-slate-900 text-white px-4 py-2.5 border-b border-slate-800 flex items-center justify-between gap-2 overflow-x-auto no-scrollbar whitespace-nowrap text-xs">
+                <div class="flex items-center gap-1.5 font-bold text-blue-400">
+                    <span>प्रश्न:</span>
+                    <span id="question-counter" class="bg-blue-600 text-white px-2 py-0.5 rounded">1 / 10</span>
+                </div>
+                <div class="flex items-center gap-1 font-mono font-bold text-amber-400 bg-slate-800 px-2.5 py-1 rounded border border-slate-700">
+                    ⏱️ <span id="exam-timer">00:15:00</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="exam-pos-marks" class="bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 px-2 py-0.5 rounded font-bold">सही: +1.0</span>
+                    <span id="exam-neg-marks" class="bg-red-500/20 border border-red-500/40 text-red-300 px-2 py-0.5 rounded font-bold">गलत: -0.25</span>
+                </div>
+            </div>
+
+            <div class="bg-slate-100 px-4 py-2.5 border-b border-slate-200 flex items-center justify-between gap-2">
+                <div class="relative">
+                    <button type="button" onclick="toggleJumpPalette()" class="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 rounded-xl text-xs font-bold shadow-sm flex items-center gap-1 cursor-pointer">🔢 Jump to Q</button>
+                    <div id="jump-palette-dropdown" class="hidden absolute left-0 mt-2 w-64 bg-white text-slate-800 rounded-xl shadow-2xl border border-slate-200 p-3 z-50">
+                        <div class="flex justify-between items-center border-b pb-1.5 mb-2">
+                            <span class="text-xs font-bold text-slate-700">किसी भी प्रश्न पर जाएं:</span>
+                            <button type="button" onclick="toggleJumpPalette()" class="text-slate-400 hover:text-slate-700 text-xs font-bold cursor-pointer p-1">✕</button>
+                        </div>
+                        <div id="jump-questions-grid" class="grid grid-cols-5 gap-1.5 max-h-48 overflow-y-auto p-1"></div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-1.5 bg-white px-2.5 py-1 rounded-xl border border-slate-300 shadow-sm">
+                    <span class="text-[11px] font-bold text-slate-600 hidden sm:inline">🌐 भाषा:</span>
+                    <select id="live-lang-select" onchange="changeLiveLanguage(this.value)" class="bg-transparent text-slate-800 text-xs font-bold focus:outline-none cursor-pointer">
+                        <option value="hi">हिन्दी (Hindi)</option>
+                        <option value="en">English (अंग्रेजी)</option>
+                    </select>
+                </div>
+
+                <button type="button" onclick="submitExamConfirm()" class="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow transition cursor-pointer">✅ Submit</button>
+            </div>
+
+            <div class="p-5 md:p-6">
+                <div id="question-text" class="text-base md:text-lg font-semibold text-slate-900 mb-6 leading-relaxed"></div>
+                <div id="options-container" class="space-y-3"></div>
+            </div>
+
+            <div class="bg-slate-50 px-5 py-4 border-t border-slate-200 flex justify-between items-center">
+                <button type="button" onclick="prevQuestion()" id="btn-prev" class="px-5 py-2.5 bg-white border border-slate-300 text-slate-700 rounded-xl text-xs font-bold hover:bg-slate-100 disabled:opacity-40 shadow-sm cursor-pointer">⬅️ Previous</button>
+                <button type="button" onclick="nextQuestion()" id="btn-next" class="px-6 py-2.5 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 disabled:opacity-40 shadow-sm cursor-pointer">Next ➡️</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Result View -->
+    <section id="result-view" class="hidden flex-grow max-w-4xl w-full mx-auto px-4 py-5">
+        <div class="bg-white rounded-2xl shadow-xl border border-slate-300 overflow-hidden">
+            <div class="p-5 md:p-8 border-b">
+                <div class="flex flex-wrap justify-between items-center gap-4">
+                    <div>
+                        <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3.5 py-1 rounded-full">📊 FINAL RESULT</span>
+                        <h2 id="res-set-title" class="text-xl md:text-2xl font-bold text-slate-900 mt-2">प्रैक्टिस सेट परिणाम</h2>
+                        <p id="res-score-summary" class="text-sm font-medium text-slate-600 mt-1"></p>
+                    </div>
+                    <button type="button" onclick="backToHome()" class="px-5 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 shadow cursor-pointer">🏠 होम पर लौटें</button>
+                </div>
+
+                <p class="text-sm font-semibold text-slate-700 mt-5 mb-4">👇 विस्तृत समीक्षा (Review) के लिए नीचे दिए गए किसी भी बॉक्स पर क्लिक करें:</p>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
+                    <div onclick="toggleResultCategory('all')" id="box-all" class="cursor-pointer bg-blue-50 hover:bg-blue-100 border-2 border-blue-300 p-4 rounded-2xl text-center transition select-none shadow-sm">
+                        <p class="text-xs text-blue-700 font-bold uppercase tracking-wider">Total Questions</p>
+                        <p id="res-total" class="text-2xl md:text-3xl font-extrabold text-blue-900 mt-1">0</p>
+                        <span class="text-[11px] text-blue-600 underline font-semibold mt-1 inline-block">देखने के लिए क्लिक करें</span>
+                    </div>
+                    <div onclick="toggleResultCategory('right')" id="box-right" class="cursor-pointer bg-emerald-50 hover:bg-emerald-100 border-2 border-emerald-300 p-4 rounded-2xl text-center transition select-none shadow-sm">
+                        <p class="text-xs text-emerald-700 font-bold uppercase tracking-wider">Right Questions</p>
+                        <p id="res-correct" class="text-2xl md:text-3xl font-extrabold text-emerald-700 mt-1">0</p>
+                        <span class="text-[11px] text-emerald-600 underline font-semibold mt-1 inline-block">देखने के लिए क्लिक करें</span>
+                    </div>
+                    <div onclick="toggleResultCategory('wrong')" id="box-wrong" class="cursor-pointer bg-red-50 hover:bg-red-100 border-2 border-red-300 p-4 rounded-2xl text-center transition select-none shadow-sm">
+                        <p class="text-xs text-red-700 font-bold uppercase tracking-wider">Wrong Questions</p>
+                        <p id="res-wrong" class="text-2xl md:text-3xl font-extrabold text-red-700 mt-1">0</p>
+                        <span class="text-[11px] text-red-600 underline font-semibold mt-1 inline-block">देखने के लिए क्लिक करें</span>
+                    </div>
+                    <div onclick="toggleResultCategory('skipped')" id="box-skipped" class="cursor-pointer bg-slate-100 hover:bg-slate-200 border-2 border-slate-300 p-4 rounded-2xl text-center transition select-none shadow-sm">
+                        <p class="text-xs text-slate-700 font-bold uppercase tracking-wider">Skipped Questions</p>
+                        <p id="res-skipped" class="text-2xl md:text-3xl font-extrabold text-slate-800 mt-1">0</p>
+                        <span class="text-[11px] text-slate-600 underline font-semibold mt-1 inline-block">देखने के लिए क्लिक करें</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="filtered-questions-wrapper" class="hidden p-3 md:p-6">
+                <div class="flex flex-wrap justify-between items-center mb-4 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <div class="flex items-center gap-2">
+                        <span id="review-category-badge" class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-lg">Category</span>
+                        <h3 id="filtered-category-title" class="text-base font-bold text-slate-900">प्रश्न समीक्षा</h3>
+                    </div>
+                    <div class="text-xs font-bold text-slate-700 bg-white px-3 py-1.5 rounded-lg border border-slate-300 shadow-sm">
+                        प्रश्न संख्या: <span id="review-pos-indicator" class="text-blue-600 font-extrabold">1 / 1</span>
+                    </div>
+                </div>
+
+                <div id="single-review-card-container" class="mb-5 w-full"></div>
+
+                <div class="flex justify-between items-center bg-slate-100 p-4 rounded-xl border border-slate-200">
+                    <button type="button" onclick="prevReviewQuestion()" id="btn-review-prev" class="px-5 py-2.5 bg-white border border-slate-300 text-slate-800 rounded-xl text-sm font-bold hover:bg-slate-200 disabled:opacity-40 shadow-sm cursor-pointer">⬅️ पिछला प्रश्न</button>
+                    <button type="button" onclick="nextReviewQuestion()" id="btn-review-next" class="px-5 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 disabled:opacity-40 shadow-sm cursor-pointer">अगला प्रश्न ➡️</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- Admin Panel Modal -->
+    <!-- ===================================================================== -->
+    <div id="admin-modal" class="fixed inset-0 z-50 bg-black/75 hidden backdrop-blur-sm overflow-y-auto p-2 sm:p-4">
+        <div class="bg-white rounded-2xl max-w-6xl w-full mx-auto my-2 sm:my-6 shadow-2xl overflow-hidden border border-slate-300 flex flex-col max-h-[94vh]">
+            <div class="bg-slate-900 text-white px-4 sm:px-6 py-4 flex justify-between items-center shrink-0">
+                <div>
+                    <h3 class="font-bold text-sm sm:text-base">🛠️ मास्टर एडमिन कंट्रोल पैनल (Admin Panel)</h3>
+                    <p class="text-[11px] text-slate-400">सभी प्रतियोगी परीक्षाएं और प्रैक्टिस सेट्स</p>
+                </div>
+                <button type="button" onclick="closeAdminPanel()" class="bg-red-600 hover:bg-red-700 text-white text-xs px-3.5 py-2 rounded-lg font-bold cursor-pointer shrink-0">✕ बंद करें</button>
+            </div>
+
+            <div class="p-4 sm:p-6 overflow-y-auto space-y-6 flex-1 touch-pan-y" style="-webkit-overflow-scrolling: touch;">
+<div class="bg-indigo-50/60 p-4 sm:p-5 rounded-xl border border-indigo-200">
+                    <h4 class="font-bold text-base text-indigo-950 mb-3">🎓 कोर्स / एग्जाम और सब-कोर्स मैनेजर</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white p-4 rounded-xl border border-slate-200">
+                            <h5 class="text-xs font-bold text-slate-800 mb-2">1️⃣ मुख्य एग्जाम जोड़ें:</h5>
+                            <div class="flex gap-2 mb-3">
+                                <input type="text" id="new-main-exam-inp" placeholder="उदा: JSSC" class="flex-grow p-2 text-xs border border-slate-300 rounded-lg">
+                                <button type="button" onclick="addMainExam()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-xs font-bold shrink-0 cursor-pointer">➕ जोड़ें</button>
+                            </div>
+                            <div id="admin-main-exams-tags" class="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto"></div>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-slate-200">
+                            <h5 class="text-xs font-bold text-slate-800 mb-2">2️⃣ सब-कैटेगरी जोड़ें:</h5>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2">
+                                <select id="parent-exam-select" onchange="renderAdminSubExamTags()" class="p-2 text-xs border border-slate-300 rounded-lg bg-slate-50 font-semibold"></select>
+                                <input type="text" id="new-sub-exam-inp" placeholder="उदा: झारखंड पुलिस" class="p-2 text-xs border border-slate-300 rounded-lg">
+                            </div>
+                            <button type="button" onclick="addSubExam()" class="w-full py-2 bg-blue-600 text-white rounded-lg text-xs font-bold mb-2 cursor-pointer">➕ सब-कैटेगरी जोड़ें</button>
+                            <div id="admin-sub-exams-tags" class="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-blue-50/60 p-4 sm:p-5 rounded-xl border border-blue-200">
+                    <h4 class="font-bold text-base text-blue-950 mb-3" id="form-mode-title">➕ प्रैक्टिस सेट और 50+ प्रश्न जोड़ें</h4>
+                    <input type="hidden" id="edit-set-id" value="">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">1. मुख्य एग्जाम</label>
+                            <select id="set-main-exam-inp" onchange="populateSubExamDropdownForSet()" class="w-full p-2 text-xs border border-slate-300 rounded-lg bg-white font-semibold"></select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">2. सब-कैटेगरी</label>
+                            <select id="set-sub-exam-inp" class="w-full p-2 text-xs border border-slate-300 rounded-lg bg-white font-semibold"></select>
+                        </div>
+                        <div class="lg:col-span-2">
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">3. प्रैक्टिस सेट का नाम</label>
+                            <input type="text" id="set-title-inp" placeholder="उदा: झारखंड पुलिस सेट 01" class="w-full p-2 text-xs border border-slate-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">समय (मिनट)</label>
+                            <input type="number" id="set-duration-inp" value="15" class="w-full p-2 text-xs border border-slate-300 rounded-lg">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">सही उत्तर अंक (+)</label>
+                            <input type="number" step="0.5" id="set-pos-inp" value="1.0" class="w-full p-2 text-xs border border-slate-300 rounded-lg bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">नेगेटिव मार्किंग (-)</label>
+                            <input type="number" step="0.05" id="set-neg-inp" value="0.25" class="w-full p-2 text-xs border border-slate-300 rounded-lg bg-white">
+                        </div>
+                        <div class="flex items-end">
+                            <label for="set-locked-inp" class="flex items-center space-x-2 text-xs font-semibold text-slate-800 p-2 bg-white rounded-lg border border-slate-300 w-full cursor-pointer select-none">
+                                <input type="checkbox" id="set-locked-inp" checked class="w-4 h-4 accent-blue-600 cursor-pointer">
+                                <span>🔒 Ad Lock चालू रखें</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <textarea id="bulk-questions-inp" rows="6" placeholder="Q: प्रश्न...&#10;A) विकल्प 1&#10;B) विकल्प 2&#10;C) विकल्प 3&#10;D) विकल्प 4&#10;Ans: 1&#10;Exp: व्याख्या..." class="w-full p-3 text-xs border border-slate-300 rounded-xl font-mono"></textarea>
+                    </div>
+                    <div class="flex gap-3">
+                        <button type="button" onclick="parseAndSavePracticeSet()" class="px-5 py-2.5 bg-blue-600 text-white rounded-xl text-xs font-bold shadow cursor-pointer">💾 सेव करें</button>
+                        <button type="button" onclick="resetAdminForm()" class="px-4 py-2.5 bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold cursor-pointer">रीसेट</button>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-sm text-slate-800 mb-3">📂 सभी प्रैक्टिस सेट्स:</h4>
+                    <div id="admin-sets-list" class="space-y-2.5"></div>
+                </div>
+
+                <div class="bg-indigo-50/60 p-4 sm:p-5 rounded-xl border border-indigo-200 flex flex-wrap justify-between items-center gap-3">
+                    <div>
+                        <h4 class="font-bold text-sm text-indigo-950">⬇️ पूरा डेटा डाउनलोड</h4>
+                        <p class="text-[11px] text-slate-500">सभी सेट, प्रश्न और परीक्षा सूची एक फाइल में (JSON)</p>
+                    </div>
+                    <button type="button" onclick="downloadAllData()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold shadow cursor-pointer">⬇️ डाउनलोड करें</button>
+                </div>
+
+                <div class="bg-emerald-50/60 p-4 sm:p-5 rounded-xl border border-emerald-200">
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-2">
+                        <h4 class="font-bold text-sm text-emerald-950">☁️ क्लाउड बैकअप (Firebase)</h4>
+                        <button type="button" onclick="loadBackupList()" class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-xs font-bold shadow cursor-pointer">बैकअप सूची देखें</button>
+                    </div>
+                    <p class="text-[11px] text-slate-500 mb-3">हर बदलाव से पहले का डेटा यहाँ सुरक्षित रहता है। किसी भी बैकअप को रिस्टोर किया जा सकता है।</p>
+                    <div id="backup-list" class="space-y-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script>
+        // =====================================================================
+        // Dynamic Top Spacer Adjustment (ताकि फिक्स बैनर के नीचे कंटेंट न दबे)
+        // =====================================================================
+        function adjustTopFixedSpacer() {
+            const topContainer = document.getElementById('sticky-top-container');
+            const spacer = document.getElementById('top-fixed-spacer');
+            if (topContainer && spacer) {
+                spacer.style.height = topContainer.offsetHeight + 'px';
+            }
+        }
+        window.addEventListener('resize', adjustTopFixedSpacer);
+        window.addEventListener('load', adjustTopFixedSpacer);
+function toggleThreeDotMenu(e) {
+            if (e) e.stopPropagation();
+            document.getElementById('three-dot-dropdown').classList.toggle('hidden');
+        }
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('three-dot-dropdown');
+            if (menu && !menu.contains(e.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+
+        function openPasswordModal() {
+            document.getElementById('three-dot-dropdown').classList.add('hidden');
+            document.getElementById('admin-pass-input').value = '';
+            document.getElementById('password-modal').classList.remove('hidden');
+            setTimeout(() => document.getElementById('admin-pass-input').focus(), 100);
+        }
+
+        function closePasswordModal() {
+            document.getElementById('password-modal').classList.add('hidden');
+        }
+
+        function verifyAdminPassword() {
+            const entered = document.getElementById('admin-pass-input').value.trim();
+            if (btoa(entered) === "MDQxOTk=") {
+                closePasswordModal();
+                openAdminPanel();
+            } else {
+                alert("❌ गलत पासवर्ड!");
+            }
+        }
+
+        function openAdminPanel() {
+            document.getElementById('admin-modal').classList.remove('hidden');
+            renderAdminExamManagers();
+            populateMainExamDropdownForSet();
+            renderAdminSetsList();
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('admin-modal').classList.add('hidden');
+        }
+
+        const defaultExamHierarchy = [
+            { id: 'jssc', name: 'JSSC', subExams: [{ id: 'jssc_police', name: 'JSSC झारखंड पुलिस' }, { id: 'jssc_kakshpal', name: 'JSSC कक्षपाल' }, { id: 'jssc_utpad', name: 'JSSC उत्पाद सिपाही' }, { id: 'jssc_cgl', name: 'JSSC CGL' }] },
+            { id: 'ssc', name: 'SSC', subExams: [{ id: 'ssc_gd', name: 'SSC GD Constable' }, { id: 'ssc_cgl', name: 'SSC CGL' }] },
+            { id: 'rrb', name: 'RRB', subExams: [{ id: 'rrb_group_d', name: 'RRB Group D' }] },
+            { id: 'upsc', name: 'UPSC', subExams: [{ id: 'upsc_pre', name: 'UPSC Prelims' }] },
+            { id: 'jpsc', name: 'JPSC', subExams: [{ id: 'jpsc_pt', name: 'JPSC PT' }] }
+        ];
+
+        let examHierarchy = JSON.parse(localStorage.getItem('sss_exam_hierarchy_v2')) || defaultExamHierarchy;
+        let selectedMainExamId = 'all';
+        let selectedSubExamId = 'all';
+        function saveHierarchyToStorage() {
+            localStorage.setItem('sss_exam_hierarchy_v2', JSON.stringify(examHierarchy));
+            if (window.cloud) window.cloud.saveHierarchy(examHierarchy).catch(e => console.error('Cloud hierarchy save error', e));
+        }
+
+        const defaultQuestionsRaw = `Q: धोने का सोडा (Washing Soda) का रासायनिक सूत्र क्या है?
+A) $Na_{2}CO_{3} \\cdot 10H_{2}O$
+B) $NaHCO_{3}$
+C) $NaOH$
+D) $NaCl$
+Ans: 1
+Exp: धोने का सोडा का रासायनिक नाम सोडियम कार्बोनेट डेकाहाइड्रेट है और इसका सूत्र $Na_{2}CO_{3} \\cdot 10H_{2}O$ है।
+
+Q: What is the chemical formula of Washing Soda?
+A) $Na_{2}CO_{3} \\cdot 10H_{2}O$
+B) $NaHCO_{3}$
+C) $NaOH$
+D) $NaCl$
+Ans: 1
+Exp: The chemical name of washing soda is sodium carbonate decahydrate and its formula is $Na_{2}CO_{3} \\cdot 10H_{2}O$.`;
+
+        function parseQuestionsFromText(rawText) {
+            const cleanText = rawText.replace(/\r\n/g, '\n').replace(/---+/g, '\n').trim();
+            const blocks = cleanText.split(/(?=\n?\s*Q\s*[:.])/i).map(b => b.trim()).filter(Boolean);
+            const singleParsed = [];
+            for (const block of blocks) {
+                const qMatch = block.match(/Q\s*[:.]\s*([\s\S]*?)(?=\n\s*A[).])/i);
+                const aMatch = block.match(/\n\s*A[).]\s*([\s\S]*?)(?=\n\s*B[).])/i);
+                const bMatch = block.match(/\n\s*B[).]\s*([\s\S]*?)(?=\n\s*C[).])/i);
+                const cMatch = block.match(/\n\s*C[).]\s*([\s\S]*?)(?=\n\s*D[).])/i);
+                const dMatch = block.match(/\n\s*D[).]\s*([\s\S]*?)(?=\n\s*Ans\s*[:.])/i);
+                const ansMatch = block.match(/Ans\s*[:.]\s*([1-4A-Da-d])/i);
+                const expMatch = block.match(/Exp\s*[:.]\s*([\s\S]*)$/i);
+
+                if (qMatch && aMatch && bMatch && cMatch && dMatch && ansMatch) {
+                    let rawAns = ansMatch[1].toUpperCase();
+                    const ansMap = { '1': 0, '2': 1, '3': 2, '4': 3, 'A': 0, 'B': 1, 'C': 2, 'D': 3 };
+                    singleParsed.push({
+                        q: qMatch[1].trim(),
+                        options: [aMatch[1].trim(), bMatch[1].trim(), cMatch[1].trim(), dMatch[1].trim()],
+                        ans: ansMap[rawAns] ?? 0,
+                        exp: expMatch ? expMatch[1].trim() : ''
+                    });
+                }
+            }
+            const finalQuestions = [];
+            let i = 0;
+            while (i < singleParsed.length) {
+                const current = singleParsed[i];
+                const next = singleParsed[i + 1];
+                const isCurrentHindi = /[ऀ-ॿ]/.test(current.q);
+                const isNextEnglish = next && !/[ऀ-ॿ]/.test(next.q) && next.ans === current.ans;
+                if (isCurrentHindi && isNextEnglish) {
+                    finalQuestions.push({ hi: current, en: next });
+                    i += 2;
+                } else {
+                    finalQuestions.push({ hi: current, en: current });
+                    i += 1;
+                }
+            }
+            return finalQuestions;
+        }
+
+        let practiceSets = JSON.parse(localStorage.getItem('sss_practice_sets_v5')) || [
+            {
+                id: 101,
+                title: "JSSC झारखंड पुलिस - सामान्य विज्ञान प्रैक्टिस सेट 01",
+                mainExamId: "jssc",
+                subExamId: "jssc_police",
+                durationMinutes: 15,
+                marksPerQuestion: 1.0,
+                negativeMarking: 0.25,
+                isLocked: true,
+                rawText: defaultQuestionsRaw,
+                questions: parseQuestionsFromText(defaultQuestionsRaw)
+            }
+        ];
+
+        // सुनिश्चित करें कि सभी सेट्स डिफ़ॉल्ट रूप से लॉक (All Sets Locked on Open) रहें
+        practiceSets.forEach(s => { s.isLocked = true; });
+
+        function saveSetsToStorage() {
+            try {
+                localStorage.setItem('sss_practice_sets_v5', JSON.stringify(practiceSets));
+            } catch (e) { console.error('Save error', e); alert('सेव करने में समस्या: ' + e.message); }
+        }
+
+        function cloudSaveSet(set) {
+            if (window.cloud) window.cloud.saveSet(set).catch(e => console.error('Cloud save error', e));
+        }
+        function cloudDeleteSet(id) {
+            if (window.cloud) window.cloud.deleteSet(id).catch(e => console.error('Cloud delete error', e));
+        }
+        function cloudBackup(reason) {
+            if (window.cloud) window.cloud.backup({ reason, sets: practiceSets, hierarchy: examHierarchy }).catch(e => console.error('Backup error', e));
+        }
+        
+        window.getLocalData = () => ({ sets: practiceSets, hierarchy: examHierarchy });
+        window.applyCloudSets = (list) => {
+            list.forEach(s => { s.isLocked = true; });
+            practiceSets = list;
+            try { localStorage.setItem('sss_practice_sets_v5', JSON.stringify(practiceSets)); } catch (e) {}
+            renderPracticeSets();
+            renderAdminSetsList();
+        };
+        window.applyCloudHierarchy = (items) => {
+            examHierarchy = items;
+            try { localStorage.setItem('sss_exam_hierarchy_v2', JSON.stringify(examHierarchy)); } catch (e) {}
+            renderNavigationBars();
+            renderPracticeSets();
+            if (!document.getElementById('admin-modal').classList.contains('hidden')) {
+                renderAdminExamManagers();
+                populateMainExamDropdownForSet();
+            }
+        };
+
+        function downloadAllData() {
+            const data = {
+                exportedAt: new Date().toISOString(),
+                hierarchy: examHierarchy,
+                practiceSets: practiceSets
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `santali-smart-study-backup-${new Date().toISOString().slice(0, 10)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+
+        // =====================================================================
+        // Auto-Bounce Left-to-Right & Right-to-Left + Instant Single Tap Helper
+        // =====================================================================
+        function attachInstantSingleClick(btn, callback) {
+            let triggered = false;
+            btn.addEventListener('pointerdown', (e) => {
+                if (e.button !== undefined && e.button !== 0) return;
+                triggered = true;
+                callback();
+                setTimeout(() => { triggered = false; }, 400);
+            });
+            btn.addEventListener('click', () => {
+                if (!triggered) callback();
+            });
+        }
+
+        function renderNavigationBars() {
+            const mainBar = document.getElementById('main-exams-bar');
+            mainBar.innerHTML = '';
+            const allBtn = document.createElement('button');
+            allBtn.type = 'button';
+            attachInstantSingleClick(allBtn, () => selectMainExam('all'));
+            allBtn.className = `shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-bold transition border cursor-pointer ${selectedMainExamId === 'all' ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'}`;
+            allBtn.innerText = '📚 सभी परीक्षाएं (All)';
+            mainBar.appendChild(allBtn);
+
+            examHierarchy.forEach(exam => {
+                const isActive = selectedMainExamId === exam.id;
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                attachInstantSingleClick(btn, () => selectMainExam(exam.id));
+                btn.className = `shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-bold transition border cursor-pointer ${isActive ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'}`;
+                btn.innerText = exam.name;
+                mainBar.appendChild(btn);
+            });
+
+            const subWrapper = document.getElementById('sub-exams-wrapper');
+            const subBar = document.getElementById('sub-exams-bar');
+            subBar.innerHTML = '';
+            if (selectedMainExamId === 'all') {
+                subWrapper.classList.add('hidden');
+            } else {
+                const examObj = examHierarchy.find(e => e.id === selectedMainExamId);
+                if (examObj && examObj.subExams.length > 0) {
+                    subWrapper.classList.remove('hidden');
+                    const allSubBtn = document.createElement('button');
+                    allSubBtn.type = 'button';
+                    attachInstantSingleClick(allSubBtn, () => selectSubExam('all'));
+                    allSubBtn.className = `shrink-0 px-3 py-1 rounded-lg text-[11px] font-bold transition border cursor-pointer ${selectedSubExamId === 'all' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}`;
+                    allSubBtn.innerText = `सभी ${examObj.name} सेट्स`;
+                    subBar.appendChild(allSubBtn);
+
+                    examObj.subExams.forEach(sub => {
+                        const isSubActive = selectedSubExamId === sub.id;
+                        const sBtn = document.createElement('button');
+                        sBtn.type = 'button';
+                        attachInstantSingleClick(sBtn, () => selectSubExam(sub.id));
+                        sBtn.className = `shrink-0 px-3 py-1 rounded-lg text-[11px] font-bold transition border cursor-pointer ${isSubActive ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}`;
+                        sBtn.innerText = sub.name;
+                        subBar.appendChild(sBtn);
+                    });
+                } else {
+                    subWrapper.classList.add('hidden');
+                }
+            }
+            setTimeout(adjustTopFixedSpacer, 20);
+        }
+
+        // मुख्य परीक्षा (Subject) और सब-कैटेगरी (Sub-Subject) का ऑटो-बाउंस एनिमेशन
+        const bounceStates = {
+            'main-exams-bar': { dir: 1, pos: 0, speed: 0.45 },
+            'sub-exams-bar': { dir: 1, pos: 0, speed: 0.45 }
+        };
+
+        function animateAutoBounceBars() {
+            ['main-exams-bar', 'sub-exams-bar'].forEach(id => {
+                const el = document.getElementById(id);
+                if (!el || el.offsetParent === null) return;
+                const maxScroll = el.scrollWidth - el.clientWidth;
+                if (maxScroll > 2) {
+                    const st = bounceStates[id];
+                    st.pos += st.dir * st.speed;
+                    if (st.pos >= maxScroll) {
+                        st.pos = maxScroll;
+                        st.dir = -1;
+                    } else if (st.pos <= 0) {
+                        st.pos = 0;
+                        st.dir = 1;
+                    }
+                    el.scrollLeft = st.pos;
+                }
+            });
+            requestAnimationFrame(animateAutoBounceBars);
+        }
+        requestAnimationFrame(animateAutoBounceBars);
+
+        function selectMainExam(mainId) {
+            selectedMainExamId = mainId;
+            selectedSubExamId = 'all';
+            renderNavigationBars();
+            renderPracticeSets();
+        }
+
+        function selectSubExam(subId) {
+            selectedSubExamId = subId;
+            renderNavigationBars();
+            renderPracticeSets();
+        }
+
+        function getSetRemainingUnlockMs(set) { return Infinity; }
+        function isSetCurrentlyLocked(set) { return false; }
+        function formatRemainingTime(ms) { return ""; }
+
+        function renderPracticeSets() {
+            const grid = document.getElementById('sets-grid');
+            grid.innerHTML = '';
+            let filtered = practiceSets;
+            let headingText = 'सभी उपलब्ध प्रैक्टिस सेट्स';
+            let trailText = 'ALL EXAMS';
+
+            if (selectedMainExamId !== 'all') {
+                const mainObj = examHierarchy.find(e => e.id === selectedMainExamId);
+                filtered = filtered.filter(s => s.mainExamId === selectedMainExamId);
+                trailText = mainObj ? mainObj.name : '';
+                headingText = mainObj ? `${mainObj.name} - सभी प्रैक्टिस सेट्स` : '';
+                if (selectedSubExamId !== 'all') {
+                    const subObj = mainObj?.subExams.find(sub => sub.id === selectedSubExamId);
+                    filtered = filtered.filter(s => s.subExamId === selectedSubExamId);
+                    if (subObj) {
+                        trailText = `${mainObj.name} ➔ ${subObj.name}`;
+                        headingText = `${subObj.name} (Practice Sets)`;
+                    }
+                }
+            }
+
+            document.getElementById('breadcrumb-trail').innerText = trailText;
+            document.getElementById('selected-course-heading').innerText = headingText;
+            document.getElementById('sets-count-badge').innerText = `${filtered.length} प्रैक्टिस सेट्स`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full bg-white p-8 rounded-2xl text-center text-slate-500 border border-slate-200 text-xs">इस श्रेणी में अभी कोई प्रैक्टिस सेट नहीं है।</div>`;
+                return;
+            }
+
+            filtered.forEach(set => {
+                const mainObj = examHierarchy.find(e => e.id === set.mainExamId);
+                const subObj = mainObj?.subExams.find(sub => sub.id === set.subExamId);
+                const badgeLabel = subObj ? subObj.name : (mainObj ? mainObj.name : 'Exam Set');
+                const remMs = Infinity;
+                const requiresAd = false;
+
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col justify-between hover:shadow-md transition";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="bg-blue-50 text-blue-700 text-[11px] font-bold px-2.5 py-1 rounded-lg">${badgeLabel}</span>
+                            <span class="text-xs font-bold text-slate-500">⏱️ ${set.durationMinutes} Min</span>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-base mb-2">${set.title}</h3>
+                        <p class="text-xs text-slate-500 mb-4">कुल प्रश्न: <strong>${set.questions.length}</strong></p>
+                    </div>
+                    <div class="pt-3 border-t border-slate-100">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold ${requiresAd ? 'text-amber-600' : 'text-emerald-600'}">🟢 उपलब्ध</span>
+                            <button type="button" onclick="initiateSetOpen(${set.id})" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-sm cursor-pointer">${requiresAd ? '📺 Watch Ad & Unlock' : 'प्रारंभ करें ➡️'}</button>
+                        </div>
+</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        let pendingSetToStart = null;
+
+        function initiateSetOpen(setId) {
+            const set = practiceSets.find(s => String(s.id) === String(setId));
+            if (!set) return;
+            pendingSetToStart = set;
+            openTermsModal(set);
+        }
+        function openTermsModal(set) {
+            document.getElementById('terms-set-info').innerHTML = `
+                <p class="font-bold text-sm">${set.title}</p>
+                <p>कुल प्रश्न: <strong>${set.questions.length}</strong> | समय: <strong>${set.durationMinutes} मिनट</strong></p>
+            `;
+            document.getElementById('accept-terms-checkbox').checked = false;
+            document.getElementById('terms-modal').classList.remove('hidden');
+        }
+
+        function closeTermsModal() {
+            document.getElementById('terms-modal').classList.add('hidden');
+        }
+
+        let activeExam = {
+            set: null,
+            lang: 'hi',
+            currentIndex: 0,
+            shuffledQuestions: [],
+            userAnswers: {},
+            questionTimes: {},
+            timerSeconds: 0,
+            timeTakenSeconds: 0,
+            intervalId: null,
+            questionStartTime: 0
+        };
+
+        function confirmAndStartExam() {
+            const checkbox = document.getElementById('accept-terms-checkbox');
+            if (!checkbox.checked) {
+                alert("कृपया टेस्ट शुरू करने से पहले नियम एवं शर्तों पर टिक करें!");
+                return;
+            }
+            const langRadio = document.querySelector('input[name="exam_lang"]:checked');
+            activeExam.lang = langRadio ? langRadio.value : 'hi';
+            document.getElementById('live-lang-select').value = activeExam.lang;
+            closeTermsModal();
+            startExamSession(pendingSetToStart);
+        }
+
+        function shuffleArray(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function startExamSession(set) {
+            activeExam.set = set;
+            activeExam.currentIndex = 0;
+            activeExam.userAnswers = {};
+            activeExam.questionTimes = {};
+            activeExam.timerSeconds = (set.durationMinutes || 15) * 60;
+            activeExam.timeTakenSeconds = 0;
+            activeExam.questionStartTime = Date.now();
+
+            let baseQuestions = JSON.parse(JSON.stringify(set.questions));
+            let shuffledQList = shuffleArray(baseQuestions);
+
+            // हर प्रश्न के लिए एक ही शफ़ल आर्डर बनाएं ताकि भाषा स्विच करने पर विकल्प न बदलें
+            activeExam.shuffledQuestions = shuffledQList.map(qPair => {
+                let newPair = {};
+                const optionOrder = shuffleArray([0, 1, 2, 3]);
+                ['hi', 'en'].forEach(lang => {
+                    if (qPair[lang]) {
+                        let originalOptions = qPair[lang].options;
+                        let newOptions = optionOrder.map(idx => originalOptions[idx]);
+                        let newAnsIndex = optionOrder.indexOf(qPair[lang].ans);
+
+                        newPair[lang] = {
+                            q: qPair[lang].q,
+                            options: newOptions,
+                            ans: newAnsIndex,
+                            exp: qPair[lang].exp
+                        };
+                    }
+                });
+                return newPair;
+            });
+
+            document.getElementById('exam-pos-marks').innerText = `सही: +${set.marksPerQuestion || 1.0}`;
+            document.getElementById('exam-neg-marks').innerText = `गलत: -${set.negativeMarking || 0.25}`;
+
+            // टेस्ट और रिजल्ट के समय सिर्फ बैनर ऐड फिक्स रखें
+            document.getElementById('top-nav-bars-wrapper').classList.add('hidden');
+            adjustTopFixedSpacer();
+
+            document.getElementById('main-home-view').classList.add('hidden');
+            document.getElementById('result-view').classList.add('hidden');
+            document.getElementById('exam-view').classList.remove('hidden');
+
+            clearInterval(activeExam.intervalId);
+            activeExam.intervalId = setInterval(() => {
+                activeExam.timerSeconds--;
+                activeExam.timeTakenSeconds++;
+
+                const hrs = String(Math.floor(activeExam.timerSeconds / 3600)).padStart(2, '0');
+                const mins = String(Math.floor((activeExam.timerSeconds % 3600) / 60)).padStart(2, '0');
+                const secs = String(activeExam.timerSeconds % 60).padStart(2, '0');
+                document.getElementById('exam-timer').innerText = `${hrs}:${mins}:${secs}`;
+
+                if (activeExam.timerSeconds <= 0) {
+                    clearInterval(activeExam.intervalId);
+                    finishAndShowResult();
+                }
+            }, 1000);
+
+            renderCurrentQuestion();
+        }
+
+        function changeLiveLanguage(newLang) {
+            activeExam.lang = newLang;
+            renderCurrentQuestion();
+        }
+
+        function toggleJumpPalette() {
+            document.getElementById('jump-palette-dropdown').classList.toggle('hidden');
+        }
+
+        function recordCurrentQuestionTime() {
+            const now = Date.now();
+            const elapsed = Math.floor((now - activeExam.questionStartTime) / 1000);
+            const idx = activeExam.currentIndex;
+            activeExam.questionTimes[idx] = (activeExam.questionTimes[idx] || 0) + elapsed;
+            activeExam.questionStartTime = now;
+        }
+
+        function renderCurrentQuestion() {
+            const idx = activeExam.currentIndex;
+            const total = activeExam.shuffledQuestions.length;
+            const qPair = activeExam.shuffledQuestions[idx];
+            const qData = qPair[activeExam.lang] || qPair.hi;
+
+            document.getElementById('question-counter').innerText = `${idx + 1} / ${total}`;
+            document.getElementById('question-text').innerHTML = `<span class="text-blue-700 font-bold mr-1">Q${idx + 1}.</span> ${qData.q}`;
+
+            const optsContainer = document.getElementById('options-container');
+            optsContainer.innerHTML = '';
+            const labels = ['A', 'B', 'C', 'D'];
+
+            qData.options.forEach((optText, optIdx) => {
+                const isSelected = activeExam.userAnswers[idx] === optIdx;
+                const btn = document.createElement('div');
+                btn.onclick = () => {
+                    if (activeExam.userAnswers[idx] === optIdx) delete activeExam.userAnswers[idx];
+                    else activeExam.userAnswers[idx] = optIdx;
+                    renderCurrentQuestion();
+                };
+                btn.className = `p-3.5 rounded-xl border text-sm cursor-pointer transition flex items-center gap-3 select-none ${isSelected ? 'bg-blue-50 border-blue-600 text-blue-950 font-semibold shadow-sm' : 'bg-white border-slate-200 hover:border-blue-400 text-slate-800'}`;
+                btn.innerHTML = `<span class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${isSelected ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-700'}">${labels[optIdx]}</span><span class="flex-grow">${optText}</span>`;
+                optsContainer.appendChild(btn);
+            });
+
+            const jumpGrid = document.getElementById('jump-questions-grid');
+            jumpGrid.innerHTML = '';
+            for (let i = 0; i < total; i++) {
+                const answered = activeExam.userAnswers[i] !== undefined;
+                const jBtn = document.createElement('button');
+                jBtn.type = 'button';
+                jBtn.onclick = () => {
+                    recordCurrentQuestionTime();
+                    activeExam.currentIndex = i;
+                    activeExam.questionStartTime = Date.now();
+                    document.getElementById('jump-palette-dropdown').classList.add('hidden');
+                    renderCurrentQuestion();
+                };
+                jBtn.className = `h-8 rounded-lg text-xs font-bold transition cursor-pointer ${i === idx ? 'bg-blue-600 text-white ring-2 ring-blue-300' : (answered ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200')}`;
+                jBtn.innerText = i + 1;
+                jumpGrid.appendChild(jBtn);
+            }
+
+            document.getElementById('btn-prev').disabled = idx === 0;
+            document.getElementById('btn-next').disabled = idx === total - 1;
+            if (window.MathJax) MathJax.typesetPromise();
+        }
+
+        function prevQuestion() {
+            recordCurrentQuestionTime();
+            if (activeExam.currentIndex > 0) {
+                activeExam.currentIndex--;
+                activeExam.questionStartTime = Date.now();
+                renderCurrentQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            recordCurrentQuestionTime();
+            if (activeExam.currentIndex < activeExam.shuffledQuestions.length - 1) {
+                activeExam.currentIndex++;
+                activeExam.questionStartTime = Date.now();
+                renderCurrentQuestion();
+            }
+        }
+
+        function submitExamConfirm() {
+            recordCurrentQuestionTime();
+            const answeredCount = Object.keys(activeExam.userAnswers).length;
+            const total = activeExam.shuffledQuestions.length;
+            if (confirm(`आपने ${total} में से ${answeredCount} प्रश्नों के उत्तर दिए हैं।\nक्या आप टेस्ट सबमिट करना चाहते हैं?`)) {
+                clearInterval(activeExam.intervalId);
+                finishAndShowResult();
+            }
+        }
+
+        let reviewCategory = null;
+        let reviewList = [];
+        let reviewIndex = 0;
+
+        function finishAndShowResult() {
+            // फाइनल रिजल्ट और रिव्यू में सिर्फ ऊपर वाला बैनर ऐड फिक्स रहे
+            document.getElementById('top-nav-bars-wrapper').classList.add('hidden');
+            adjustTopFixedSpacer();
+
+            document.getElementById('exam-view').classList.add('hidden');
+            document.getElementById('result-view').classList.remove('hidden');
+
+            const set = activeExam.set;
+            const total = activeExam.shuffledQuestions.length;
+            const posMarks = set.marksPerQuestion || 1.0;
+            const negMarks = set.negativeMarking || 0.25;
+            let correct = 0;
+            let wrong = 0;
+            let skipped = 0;
+
+            activeExam.shuffledQuestions.forEach((qPair, idx) => {
+                const qData = qPair[activeExam.lang] || qPair.hi;
+                const userAns = activeExam.userAnswers[idx];
+                if (userAns === undefined) skipped++;
+                else if (userAns === qData.ans) correct++;
+                else wrong++;
+            });
+
+            const rawScore = (correct * posMarks) - (wrong * negMarks);
+            const finalScore = Math.max(0, rawScore).toFixed(2);
+            const maxScore = (total * posMarks).toFixed(0);
+            const attempted = correct + wrong;
+            const accuracy = attempted > 0 ? Math.round((correct / attempted) * 100) : 0;
+
+            const totalTimeSec = activeExam.timeTakenSeconds;
+            const tHrs = String(Math.floor(totalTimeSec / 3600)).padStart(2, '0');
+            const tMins = String(Math.floor((totalTimeSec % 3600) / 60)).padStart(2, '0');
+            const tSecs = String(totalTimeSec % 60).padStart(2, '0');
+
+            document.getElementById('res-set-title').innerText = set.title;
+            document.getElementById('res-score-summary').innerText = `कुल स्कोर: ${finalScore} / ${maxScore} • सटीकता: ${accuracy}% • कुल समय लिया गया: ${tHrs}:${tMins}:${tSecs}`;
+
+            document.getElementById('res-total').innerText = total;
+            document.getElementById('res-correct').innerText = correct;
+            document.getElementById('res-wrong').innerText = wrong;
+            document.getElementById('res-skipped').innerText = skipped;
+
+            document.getElementById('filtered-questions-wrapper').classList.add('hidden');
+            resetBoxHighlights();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetBoxHighlights() {
+            ['all', 'right', 'wrong', 'skipped'].forEach(type => {
+                const box = document.getElementById(`box-${type}`);
+                if (box) box.classList.remove('ring-4', 'ring-blue-400', 'ring-emerald-400', 'ring-red-400', 'ring-slate-400');
+            });
+        }
+
+        function toggleResultCategory(category) {
+            const wrapper = document.getElementById('filtered-questions-wrapper');
+            resetBoxHighlights();
+
+            if (reviewCategory === category) {
+                reviewCategory = null;
+                wrapper.classList.add('hidden');
+                return;
+            }
+
+            reviewCategory = category;
+            wrapper.classList.remove('hidden');
+
+            const box = document.getElementById(`box-${category}`);
+            if (category === 'all') box.classList.add('ring-4', 'ring-blue-400');
+            if (category === 'right') box.classList.add('ring-4', 'ring-emerald-400');
+            if (category === 'wrong') box.classList.add('ring-4', 'ring-red-400');
+            if (category === 'skipped') box.classList.add('ring-4', 'ring-slate-400');
+
+            const titles = {
+                'all': '📘 सभी प्रश्न (Total Questions)',
+                'right': '✅ सही उत्तर वाले प्रश्न (Right Questions)',
+                'wrong': '❌ गलत उत्तर वाले प्रश्न (Wrong Questions)',
+                'skipped': '⚪ छोड़े गए प्रश्न (Skipped Questions)'
+            };
+            document.getElementById('filtered-category-title').innerText = titles[category];
+            document.getElementById('review-category-badge').innerText = category.toUpperCase();
+
+            reviewList = [];
+            activeExam.shuffledQuestions.forEach((qPair, idx) => {
+                const qData = qPair[activeExam.lang] || qPair.hi;
+                const userAns = activeExam.userAnswers[idx];
+                const correctAns = qData.ans;
+                const isSkipped = userAns === undefined;
+                const isRight = userAns === correctAns;
+                const isWrong = !isSkipped && !isRight;
+
+                if (category === 'right' && !isRight) return;
+                if (category === 'wrong' && !isWrong) return;
+                if (category === 'skipped' && !isSkipped) return;
+
+                reviewList.push({ qPair, idx, userAns, correctAns });
+            });
+
+            reviewIndex = 0;
+            renderSingleReviewQuestion();
+        }
+
+        // =====================================================================
+        // फाइनल रिजल्ट में एक्सप्लेनेशन ड्रॉपडाउन (Closed by Default with ▼ Icon)
+        // =====================================================================
+        function renderSingleReviewQuestion() {
+            const container = document.getElementById('single-review-card-container');
+            container.innerHTML = '';
+
+            if (reviewList.length === 0) {
+                container.innerHTML = `<div class="p-6 text-center text-sm text-slate-500 bg-slate-50 rounded-xl border border-slate-200">इस श्रेणी में कोई प्रश्न नहीं है।</div>`;
+                document.getElementById('btn-review-prev').disabled = true;
+                document.getElementById('btn-review-next').disabled = true;
+                document.getElementById('review-pos-indicator').innerText = `0 / 0`;
+                return;
+            }
+
+            const item = reviewList[reviewIndex];
+            const qData = item.qPair[activeExam.lang] || item.qPair.hi;
+            const qRealIdx = item.idx;
+            const userAns = item.userAns;
+            const correctAns = item.correctAns;
+            const qTimeSec = activeExam.questionTimes[qRealIdx] || 0;
+
+            let statusBadge = '';
+            if (userAns === undefined) statusBadge = `<span class="bg-slate-200 text-slate-700 text-xs font-bold px-3 py-1 rounded-full">⚪ Skipped</span>`;
+            else if (userAns === correctAns) statusBadge = `<span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">✅ Right</span>`;
+            else statusBadge = `<span class="bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full">❌ Wrong</span>`;
+
+            const labels = ['A', 'B', 'C', 'D'];
+            const card = document.createElement('div');
+            card.className = "bg-white rounded-2xl p-4 md:p-6 border border-slate-300 shadow-sm w-full";
+            card.innerHTML = `
+                <div class="flex flex-wrap justify-between items-start gap-2 mb-4 border-b pb-3">
+                    <p class="font-bold text-base md:text-lg text-slate-900"><span class="text-blue-700 font-extrabold mr-1">Q${qRealIdx + 1}.</span> ${qData.q}</p>
+                    <div class="flex items-center gap-2">
+                        <span class="bg-amber-50 text-amber-900 text-xs font-bold px-3 py-1 rounded-full border border-amber-200">⏱️ लिया गया समय: ${qTimeSec}s</span>
+                        ${statusBadge}
+                    </div>
+                </div>
+                <div class="space-y-3 my-4 text-sm">
+                    ${qData.options.map((opt, oIdx) => {
+                        let boxStyle = "bg-slate-50 border-slate-200 text-slate-700";
+                        if (oIdx === correctAns) boxStyle = "bg-emerald-50 border-emerald-500 text-emerald-900 font-bold shadow-sm";
+                        else if (oIdx === userAns && userAns !== correctAns) boxStyle = "bg-red-50 border-red-400 text-red-900 font-semibold shadow-sm";
+                        return `<div class="p-3.5 rounded-xl border ${boxStyle} flex items-center gap-3"><span class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${oIdx === correctAns ? 'bg-emerald-600 text-white' : (oIdx === userAns ? 'bg-red-500 text-white' : 'bg-slate-100 text-slate-700')}">${labels[oIdx]}</span><span class="flex-grow">${opt}</span></div>`;
+                    }).join('')}
+                </div>
+                ${qData.exp ? `
+                    <details class="mt-4 bg-amber-50 border border-amber-200 rounded-xl text-sm text-slate-900 overflow-hidden">
+                        <summary class="cursor-pointer font-bold text-amber-900 p-3.5 select-none flex items-center justify-between hover:bg-amber-100/60 transition">
+                            <span>💡 विस्तृत व्याख्या (Explanation)</span>
+                            <span class="dropdown-arrow text-amber-800 font-extrabold transition-transform duration-200">▼</span>
+                        </summary>
+                        <div class="px-4 pb-4 pt-2 border-t border-amber-200 leading-relaxed bg-amber-50/40">${qData.exp}</div>
+                    </details>
+                ` : ''}
+            `;
+            container.appendChild(card);
+
+            document.getElementById('review-pos-indicator').innerText = `${reviewIndex + 1} / ${reviewList.length}`;
+            document.getElementById('btn-review-prev').disabled = reviewIndex === 0;
+            document.getElementById('btn-review-next').disabled = reviewIndex === reviewList.length - 1;
+
+            if (window.MathJax) MathJax.typesetPromise();
+        }
+
+        function prevReviewQuestion() {
+            if (reviewIndex > 0) {
+                reviewIndex--;
+                renderSingleReviewQuestion();
+            }
+        }
+
+        function nextReviewQuestion() {
+            if (reviewIndex < reviewList.length - 1) {
+                reviewIndex++;
+                renderSingleReviewQuestion();
+            }
+        }
+
+        function backToHome() {
+            clearInterval(activeExam.intervalId);
+            document.getElementById('exam-view').classList.add('hidden');
+            document.getElementById('result-view').classList.add('hidden');
+            document.getElementById('main-home-view').classList.remove('hidden');
+            document.getElementById('top-nav-bars-wrapper').classList.remove('hidden');
+            adjustTopFixedSpacer();
+            renderPracticeSets();
+        }
+        function renderAdminExamManagers() {
+            const mainTags = document.getElementById('admin-main-exams-tags');
+            const parentSelect = document.getElementById('parent-exam-select');
+            mainTags.innerHTML = '';
+            parentSelect.innerHTML = '';
+
+            examHierarchy.forEach(exam => {
+                const tag = document.createElement('span');
+                tag.className = "bg-slate-100 border border-slate-300 text-slate-800 text-[11px] font-semibold px-2.5 py-1 rounded-lg flex items-center gap-1.5";
+                tag.innerHTML = `${exam.name} <button type="button" onclick="deleteMainExam('${exam.id}')" class="text-red-500 font-bold cursor-pointer">✕</button>`;
+                mainTags.appendChild(tag);
+
+                const opt = document.createElement('option');
+                opt.value = exam.id;
+                opt.innerText = exam.name;
+                parentSelect.appendChild(opt);
+            });
+            renderAdminSubExamTags();
+        }
+
+        function renderAdminSubExamTags() {
+            const parentId = document.getElementById('parent-exam-select').value;
+            const subTags = document.getElementById('admin-sub-exams-tags');
+            subTags.innerHTML = '';
+            const examObj = examHierarchy.find(e => e.id === parentId);
+            if (!examObj) return;
+
+            examObj.subExams.forEach(sub => {
+                const tag = document.createElement('span');
+                tag.className = "bg-blue-50 border border-blue-200 text-blue-900 text-[11px] font-semibold px-2.5 py-1 rounded-lg flex items-center gap-1.5";
+                tag.innerHTML = `${sub.name} <button type="button" onclick="deleteSubExam('${parentId}', '${sub.id}')" class="text-red-500 font-bold cursor-pointer">✕</button>`;
+                subTags.appendChild(tag);
+            });
+        }
+
+        function addMainExam() {
+            const name = document.getElementById('new-main-exam-inp').value.trim();
+            if (!name) return;
+            const id = 'exam_' + Date.now();
+            examHierarchy.push({ id, name, subExams: [{ id: id + '_gen', name: `${name} General` }] });
+            document.getElementById('new-main-exam-inp').value = '';
+            saveHierarchyToStorage();
+            renderAdminExamManagers();
+            populateMainExamDropdownForSet();
+            renderNavigationBars();
+        }
+
+        function deleteMainExam(examId) {
+            if (confirm("हटाना चाहते हैं?")) {
+                examHierarchy = examHierarchy.filter(e => e.id !== examId);
+                saveHierarchyToStorage();
+                renderAdminExamManagers();
+                populateMainExamDropdownForSet();
+                renderNavigationBars();
+            }
+        }
+
+        function addSubExam() {
+            const parentId = document.getElementById('parent-exam-select').value;
+            const subName = document.getElementById('new-sub-exam-inp').value.trim();
+            if (!parentId || !subName) return;
+            const examObj = examHierarchy.find(e => e.id === parentId);
+            if (examObj) {
+                examObj.subExams.push({ id: 'sub_' + Date.now(), name: subName });
+                document.getElementById('new-sub-exam-inp').value = '';
+                saveHierarchyToStorage();
+                renderAdminSubExamTags();
+                populateMainExamDropdownForSet();
+                renderNavigationBars();
+            }
+        }
+
+        function deleteSubExam(parentId, subId) {
+            const examObj = examHierarchy.find(e => e.id === parentId);
+            if (examObj) {
+                examObj.subExams = examObj.subExams.filter(s => s.id !== subId);
+                saveHierarchyToStorage();
+                renderAdminSubExamTags();
+                populateMainExamDropdownForSet();
+                renderNavigationBars();
+            }
+        }
+
+        function populateMainExamDropdownForSet() {
+            const mainSel = document.getElementById('set-main-exam-inp');
+            mainSel.innerHTML = '';
+            examHierarchy.forEach(exam => {
+                const opt = document.createElement('option');
+                opt.value = exam.id;
+                opt.innerText = exam.name;
+                mainSel.appendChild(opt);
+            });
+            populateSubExamDropdownForSet();
+        }
+
+        function populateSubExamDropdownForSet() {
+            const mainId = document.getElementById('set-main-exam-inp').value;
+            const subSel = document.getElementById('set-sub-exam-inp');
+            subSel.innerHTML = '';
+            const examObj = examHierarchy.find(e => e.id === mainId);
+            if (examObj && examObj.subExams.length > 0) {
+                examObj.subExams.forEach(sub => {
+                    const opt = document.createElement('option');
+                    opt.value = sub.id;
+                    opt.innerText = sub.name;
+                    subSel.appendChild(opt);
+                });
+            } else {
+                const opt = document.createElement('option');
+                opt.value = 'general';
+                opt.innerText = 'General';
+                subSel.appendChild(opt);
+            }
+        }
+
+        function parseAndSavePracticeSet() {
+            const mainExamId = document.getElementById('set-main-exam-inp').value;
+            const subExamId = document.getElementById('set-sub-exam-inp').value;
+            const title = document.getElementById('set-title-inp').value.trim();
+            const duration = parseInt(document.getElementById('set-duration-inp').value) || 15;
+            const posMarks = parseFloat(document.getElementById('set-pos-inp').value) || 1.0;
+            const negMarks = parseFloat(document.getElementById('set-neg-inp').value) || 0.25;
+            const isLocked = true;
+            const rawText = document.getElementById('bulk-questions-inp').value.trim();
+            const editId = document.getElementById('edit-set-id').value;
+
+            if (!title || !rawText) {
+                alert("कृपया नाम और प्रश्न भरें!");
+                return;
+            }
+            const parsedQuestions = parseQuestionsFromText(rawText);
+            if (parsedQuestions.length === 0) {
+                alert("❌ फॉर्मेट सही नहीं है!\n\nसही फॉर्मेट:\nQ: प्रश्न\nA) विकल्प\nB) विकल्प\nC) विकल्प\nD) विकल्प\nAns: 1\nExp: व्याख्या");
+                return;
+            }
+
+            cloudBackup(editId ? 'सेट एडिट से पहले' : 'नया सेट जोड़ने से पहले');
+
+            if (editId) {
+                const idx = practiceSets.findIndex(s => String(s.id) === String(editId));
+                if (idx !== -1) {
+                    practiceSets[idx] = { ...practiceSets[idx], title, mainExamId, subExamId, durationMinutes: duration, marksPerQuestion: posMarks, negativeMarking: negMarks, isLocked, rawText, questions: parsedQuestions };
+                    cloudSaveSet(practiceSets[idx]);
+                    alert(`✅ प्रैक्टिस सेट अपडेट हो गया! (${parsedQuestions.length} प्रश्न)`);
+                } else {
+                    alert("एडिट करने के लिए सेट नहीं मिला!");
+                }
+            } else {
+                const newId = Date.now();
+                const newSet = { id: newId, title, mainExamId, subExamId, durationMinutes: duration, marksPerQuestion: posMarks, negativeMarking: negMarks, isLocked, rawText, questions: parsedQuestions };
+                practiceSets.unshift(newSet);
+                cloudSaveSet(newSet);
+                alert(`✅ नया प्रैक्टिस सेट सेव हो गया! (${parsedQuestions.length} प्रश्न)`);
+            }
+
+            saveSetsToStorage();
+            resetAdminForm();
+            renderAdminSetsList();
+            renderPracticeSets();
+        }
+
+        function resetAdminForm() {
+            document.getElementById('edit-set-id').value = '';
+            document.getElementById('set-title-inp').value = '';
+            document.getElementById('bulk-questions-inp').value = '';
+            document.getElementById('form-mode-title').innerText = '➕ प्रैक्टिस सेट और 50+ प्रश्न जोड़ें';
+        }
+
+        function editPracticeSet(setId) {
+            const set = practiceSets.find(s => String(s.id) === String(setId));
+            if (!set) { alert("सेट नहीं मिला!"); return; }
+            document.getElementById('edit-set-id').value = String(set.id);
+            document.getElementById('set-main-exam-inp').value = set.mainExamId;
+            populateSubExamDropdownForSet();
+            setTimeout(() => { document.getElementById('set-sub-exam-inp').value = set.subExamId; }, 50);
+            document.getElementById('set-title-inp').value = set.title;
+            document.getElementById('set-duration-inp').value = set.durationMinutes;
+            document.getElementById('set-pos-inp').value = set.marksPerQuestion || 1.0;
+            document.getElementById('set-neg-inp').value = set.negativeMarking || 0.25;
+            document.getElementById('set-locked-inp').checked = true;
+            document.getElementById('bulk-questions-inp').value = set.rawText || '';
+            document.getElementById('form-mode-title').innerText = '✏️ प्रैक्टिस सेट एडिट करें';
+            document.getElementById('form-mode-title').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function deletePracticeSet(setId) {
+            if (confirm("क्या आप वाकई इस प्रैक्टिस सेट को डिलीट करना चाहते हैं?")) {
+                cloudBackup('सेट डिलीट से पहले');
+                practiceSets = practiceSets.filter(s => String(s.id) !== String(setId));
+                cloudDeleteSet(setId);
+                saveSetsToStorage();
+                renderAdminSetsList();
+                renderPracticeSets();
+                alert("🗑️ सेट डिलीट हो गया!");
+            }
+        }
+
+        function renderAdminSetsList() {
+            const container = document.getElementById('admin-sets-list');
+            container.innerHTML = '';
+            practiceSets.forEach(set => {
+                const mainObj = examHierarchy.find(e => e.id === set.mainExamId);
+                const subObj = mainObj?.subExams.find(sub => sub.id === set.subExamId);
+                const pathLabel = `${mainObj ? mainObj.name : ''} ➔ ${subObj ? subObj.name : ''}`;
+                const div = document.createElement('div');
+                div.className = "bg-white p-3.5 rounded-xl border border-slate-200 flex flex-wrap justify-between items-center gap-2";
+                div.innerHTML = `
+                    <div>
+                        <span class="text-[10px] font-bold text-indigo-600 block">${pathLabel}</span>
+                        <span class="font-bold text-xs text-slate-900">${set.title}</span>
+                        <span class="ml-2 text-[11px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-semibold">${set.questions.length} Qs</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <button type="button" onclick="editPracticeSet(${set.id})" class="px-3 py-1.5 bg-amber-500 text-white rounded-lg text-xs font-bold cursor-pointer">✏️ Edit</button>
+                        <button type="button" onclick="deletePracticeSet(${set.id})" class="px-3 py-1.5 bg-red-600 text-white rounded-lg text-xs font-bold cursor-pointer">🗑️ Delete</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        async function loadBackupList() {
+            const box = document.getElementById('backup-list');
+            if (!window.cloud) {
+                box.innerHTML = '<p class="text-xs text-red-600">Firebase अभी कनेक्ट नहीं है। पेज रीलोड करके देखें।</p>';
+                return;
+            }
+            box.innerHTML = '<p class="text-xs text-slate-500">लोड हो रहा है...</p>';
+            try {
+                const items = await window.cloud.listBackups();
+                if (!items.length) {
+                    box.innerHTML = '<p class="text-xs text-slate-500">अभी कोई बैकअप नहीं मिला।</p>';
+                    return;
+                }
+                box.innerHTML = '';
+                items.forEach(b => {
+                    const when = b.createdAt && b.createdAt.toDate ? b.createdAt.toDate().toLocaleString('hi-IN') : 'अभी';
+                    const row = document.createElement('div');
+                    row.className = 'bg-white p-3 rounded-lg border border-slate-200 flex flex-wrap justify-between items-center gap-2';
+                    const info = document.createElement('div');
+                    info.innerHTML = `<span class="text-xs font-bold text-slate-800 block">${b.reason || 'बैकअप'}</span><span class="text-[11px] text-slate-500">${when} • ${(b.sets || []).length} सेट्स</span>`;
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xs font-bold cursor-pointer';
+                    btn.innerText = '♻️ रिस्टोर';
+                    btn.onclick = () => restoreFromBackup(b);
+                    row.appendChild(info);
+                    row.appendChild(btn);
+                    box.appendChild(row);
+                });
+            } catch (e) {
+                box.innerHTML = `<p class="text-xs text-red-600">त्रुटि: ${e.message}</p>`;
+            }
+        }
+
+        async function restoreFromBackup(b) {
+            if (!confirm('क्या आप इस बैकअप को रिस्टोर करना चाहते हैं? मौजूदा डेटा का भी नया बैकअप ले लिया जाएगा।')) return;
+            try {
+                await window.cloud.backup({ reason: 'रिस्टोर से पहले', sets: practiceSets, hierarchy: examHierarchy });
+                await window.cloud.restore({ sets: b.sets || [], hierarchy: b.hierarchy });
+                alert('✅ बैकअप रिस्टोर हो गया!');
+                loadBackupList();
+            } catch (e) {
+                alert('रिस्टोर में त्रुटि: ' + e.message);
+            }
+        }
+
+        renderNavigationBars();
+        renderPracticeSets();
+        setTimeout(adjustTopFixedSpacer, 100);
+    </script>
+
+    <!-- Firebase Connection Module -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-analytics.js";
+        import {
+            getFirestore, collection, doc, getDoc, getDocs, setDoc, deleteDoc, addDoc,
+            onSnapshot, query, orderBy, limit, serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxfv8UNc9oqeYYRgbSJ46WL6S-XaCrX-s",
+            authDomain: "santali-smart-study.firebaseapp.com",
+            projectId: "santali-smart-study",
+            storageBucket: "santali-smart-study.firebasestorage.app",
+            messagingSenderId: "145439211624",
+            appId: "1:145439211624:web:68516c4dfb2863218bfbdd",
+            measurementId: "G-0E5ER5GG90"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        getAnalytics(app);
+        const db = getFirestore(app);
+
+        const clean = (o) => JSON.parse(JSON.stringify(o));
+
+        window.cloud = {
+            saveSet: (set) => setDoc(doc(db, 'practiceSets', String(set.id)), clean(set)),
+            deleteSet: (id) => deleteDoc(doc(db, 'practiceSets', String(id))),
+            saveHierarchy: (items) => setDoc(doc(db, 'config', 'examHierarchy'), { items: clean(items) }),
+            backup: (payload) => addDoc(collection(db, 'backups'), { ...clean(payload), createdAt: serverTimestamp() }),
+            listBackups: async () => {
+                const snap = await getDocs(query(collection(db, 'backups'), orderBy('createdAt', 'desc'), limit(10)));
+                return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            },
+            restore: async ({ sets, hierarchy }) => {
+                const current = await getDocs(collection(db, 'practiceSets'));
+                const keep = new Set(sets.map(s => String(s.id)));
+                const ops = current.docs.filter(d => !keep.has(d.id)).map(d => deleteDoc(d.ref));
+                sets.forEach(s => ops.push(setDoc(doc(db, 'practiceSets', String(s.id)), clean(s))));
+                if (hierarchy) ops.push(setDoc(doc(db, 'config', 'examHierarchy'), { items: clean(hierarchy) }));
+                await Promise.all(ops);
+            }
+        };
+
+        async function initSync() {
+            try {
+                const metaRef = doc(db, 'config', 'meta');
+                const meta = await getDoc(metaRef);
+                if (!meta.exists()) {
+                    const local = window.getLocalData();
+                    await Promise.all([
+                        ...local.sets.map(s => window.cloud.saveSet(s)),
+                        window.cloud.saveHierarchy(local.hierarchy),
+                        setDoc(metaRef, { seeded: true, seededAt: serverTimestamp() })
+                    ]);
+                }
+
+                onSnapshot(collection(db, 'practiceSets'), (snap) => {
+                    const list = snap.docs.map(d => d.data()).sort((a, b) => Number(b.id) - Number(a.id));
+                    window.applyCloudSets(list);
+                });
+                onSnapshot(doc(db, 'config', 'examHierarchy'), (snap) => {
+                    if (snap.exists()) window.applyCloudHierarchy(snap.data().items);
+                });
+            } catch (e) {
+                console.error('Firebase sync error', e);
+            }
+        }
+        initSync();
+    </script>
+</body>
+</html>
